@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>depHy API Test Interface</title>
+    <style>
+        body {
+            font-family: 'IBM Plex Sans', Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #E5E0D8;
+            color: #725C3F;
+        }
+        .container {
+            background: rgba(229, 224, 216, 0.95);
+            padding: 30px;
+            border-radius: 18px;
+            box-shadow: 0 8px 32px rgba(114,92,63,0.1);
+            border: 1.5px solid rgba(208,167,123,0.25);
+        }
+        h1 {
+            color: #725C3F;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+        }
+        input, select {
+            width: 100%;
+            padding: 12px;
+            border: 1.5px solid rgba(208,167,123,0.25);
+            border-radius: 8px;
+            font-size: 16px;
+            background: rgba(255,255,255,0.1);
+            color: #725C3F;
+        }
+        input:focus, select:focus {
+            outline: none;
+            border-color: #E5ADA8;
+            box-shadow: 0 0 0 3px rgba(229,173,168,0.1);
+        }
+        button {
+            background: linear-gradient(135deg, #E5ADA8 0%, #D0A77B 100%);
+            color: #725C3F;
+            border: none;
+            border-radius: 12px;
+            padding: 15px 30px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 20px;
+            transition: all 0.3s;
+        }
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(208,167,123,0.25);
+        }
+        button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+        .result {
+            margin-top: 30px;
+            padding: 20px;
+            border-radius: 12px;
+            background: rgba(216,215,178,0.3);
+            border: 1px solid rgba(208,167,123,0.2);
+        }
+        .result h3 {
+            margin-top: 0;
+            color: #725C3F;
+        }
+        .probability-bar {
+            background: rgba(208,167,123,0.2);
+            border-radius: 6px;
+            height: 20px;
+            margin: 5px 0;
+            overflow: hidden;
+        }
+        .probability-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #E5ADA8, #D0A77B);
+            transition: width 0.5s ease;
+        }
+        .error {
+            background: rgba(255,0,0,0.1);
+            border: 1px solid rgba(255,0,0,0.3);
+            color: #d32f2f;
+        }
+        .success {
+            background: rgba(0,255,0,0.1);
+            border: 1px solid rgba(0,255,0,0.3);
+            color: #2e7d32;
+        }
+        .loading {
+            text-align: center;
+            color: #725C3F;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>depHy Reaction Prediction API</h1>
+        
+        <form id="predictionForm">
+            <div class="form-group">
+                <label for="temperature">Temperature (°C):</label>
+                <input type="number" id="temperature" name="temperature" min="25" max="300" step="1" value="150" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="pressure">Pressure (atm):</label>
+                <input type="number" id="pressure" name="pressure" min="0.5" max="3.0" step="0.1" value="1.5" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="concentration_A">Concentration A (mol/L):</label>
+                <input type="number" id="concentration_A" name="concentration_A" min="0.1" max="1.0" step="0.1" value="0.5" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="concentration_B">Concentration B (mol/L):</label>
+                <input type="number" id="concentration_B" name="concentration_B" min="0.1" max="1.0" step="0.1" value="0.5" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="catalyst">Catalyst:</label>
+                <select id="catalyst" name="catalyst" required>
+                    <option value="yes">Yes</option>
+                    <option value="no">No</option>
+                </select>
+            </div>
+            
+            <button type="submit" id="submitBtn">Predict Reaction Outcome</button>
+        </form>
+        
+        <div id="result" class="result" style="display: none;">
+            <h3>Prediction Results</h3>
+            <div id="resultContent"></div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('predictionForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const submitBtn = document.getElementById('submitBtn');
+            const resultDiv = document.getElementById('result');
+            const resultContent = document.getElementById('resultContent');
+            
+            // Show loading state
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Predicting...';
+            resultDiv.style.display = 'block';
+            resultContent.innerHTML = '<div class="loading">Analyzing reaction conditions...</div>';
+            
+            // Get form data
+            const formData = {
+                temperature: parseFloat(document.getElementById('temperature').value),
+                pressure: parseFloat(document.getElementById('pressure').value),
+                concentration_A: parseFloat(document.getElementById('concentration_A').value),
+                concentration_B: parseFloat(document.getElementById('concentration_B').value),
+                catalyst: document.getElementById('catalyst').value
+            };
+            
+            try {
+                const response = await fetch('http://localhost:5000/predict-reaction', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(formData)
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    // Display results
+                    let html = `
+                        <p><strong>Predicted Outcome:</strong> <span style="color: #2e7d32; font-weight: bold;">${data.predicted_outcome}</span></p>
+                        <p><strong>Confidence:</strong> ${(data.confidence * 100).toFixed(1)}%</p>
+                        
+                        <h4>Probability Breakdown:</h4>
+                    `;
+                    
+                    // Add probability bars
+                    Object.entries(data.probabilities).forEach(([outcome, prob]) => {
+                        const percentage = (prob * 100).toFixed(1);
+                        html += `
+                            <div>
+                                <strong>${outcome}:</strong> ${percentage}%
+                                <div class="probability-bar">
+                                    <div class="probability-fill" style="width: ${percentage}%"></div>
+                                </div>
+                            </div>
+                        `;
+                    });
+                    
+                    html += `
+                        <h4>Input Conditions:</h4>
+                        <ul>
+                            <li>Temperature: ${data.input_conditions.temperature} °C</li>
+                            <li>Pressure: ${data.input_conditions.pressure} atm</li>
+                            <li>Concentration A: ${data.input_conditions.concentration_A} mol/L</li>
+                            <li>Concentration B: ${data.input_conditions.concentration_B} mol/L</li>
+                            <li>Catalyst: ${data.input_conditions.catalyst}</li>
+                        </ul>
+                    `;
+                    
+                    resultContent.innerHTML = html;
+                    resultDiv.className = 'result success';
+                } else {
+                    resultContent.innerHTML = `<div class="error"><strong>Error:</strong> ${data.error}</div>`;
+                    resultDiv.className = 'result error';
+                }
+                
+            } catch (error) {
+                resultContent.innerHTML = `
+                    <div class="error">
+                        <strong>Connection Error:</strong> Could not connect to the API. 
+                        Make sure the Flask server is running on http://localhost:5000
+                    </div>
+                `;
+                resultDiv.className = 'result error';
+            } finally {
+                // Reset button state
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Predict Reaction Outcome';
+            }
+        });
+    </script>
+</body>
+</html> 

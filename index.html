@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>depHy - Optimize Chemical Reactions</title>
-  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;600;700&family=Baloo+2:wght@700&display=swap" rel="stylesheet">
   <style>
     :root {
       --color1: #E5ADA8;
@@ -17,7 +17,7 @@
       --glass-border: rgba(208, 167, 123, 0.25);
     }
     body {
-      font-family: 'Quicksand', 'Segoe UI', Arial, sans-serif;
+      font-family: 'IBM Plex Sans', 'Quicksand', 'Segoe UI', Arial, sans-serif;
       margin: 0;
       padding: 0;
       background: var(--color2);
@@ -39,7 +39,7 @@
       display: flex;
       flex-direction: row;
       align-items: center;
-      justify-content: center;
+      justify-content: space-between;
       padding: 1.5rem 2rem 1rem 2rem;
       position: relative;
       min-height: 120px;
@@ -49,40 +49,55 @@
       backdrop-filter: blur(16px) saturate(1.2);
       -webkit-backdrop-filter: blur(16px) saturate(1.2);
     }
-    .hamburger-btn {
-      position: absolute;
-      top: 1.2rem;
-      left: 1.5rem;
-      width: 44px;
-      height: 44px;
-      background: none;
-      border: none;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      cursor: pointer;
-      z-index: 10;
-    }
-    .hamburger-btn span {
-      display: block;
-      width: 28px;
-      height: 4px;
-      margin: 3px 0;
-      background: var(--color4);
-      border-radius: 2px;
-      transition: 0.3s;
-    }
-    .header-center {
+    .header-left {
       display: flex;
       align-items: center;
-      justify-content: center;
       gap: 2.2rem;
-      width: 100%;
+    }
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+    }
+    .nav-btn {
+      background: var(--color3);
+      color: var(--color4);
+      border: none;
+      border-radius: 8px;
+      padding: 0.8rem 1.5rem;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 0 2px 8px rgba(114,92,63,0.08);
+      font-family: 'IBM Plex Sans', 'Quicksand', 'Segoe UI', Arial, sans-serif;
+    }
+    .nav-btn:hover {
+      background: var(--color1);
+      transform: translateY(-2px) scale(1.02);
+      box-shadow: 0 4px 16px rgba(208,167,123,0.2);
+      color: var(--color4);
+    }
+    .nav-btn.primary {
+      background: var(--color1);
+      color: var(--color4);
+    }
+    .nav-btn.primary:hover {
+      background: var(--color3);
+      transform: translateY(-2px) scale(1.02);
+      box-shadow: 0 4px 16px rgba(208,167,123,0.25);
+    }
+    .nav-btn.contact-btn {
+      background: var(--color6);
+      color: var(--color4);
+    }
+    .nav-btn.contact-btn:hover {
+      background: var(--color4);
+      color: var(--color6);
     }
     .logo {
       font-size: 2.8rem;
-      font-family: 'Quicksand', 'Segoe UI', Arial, sans-serif;
+      font-family: 'IBM Plex Sans', 'Quicksand', 'Segoe UI', Arial, sans-serif;
       font-weight: bold;
       letter-spacing: 2px;
       color: var(--color4);
@@ -93,22 +108,24 @@
       text-shadow: 0 2px 12px rgba(208,167,123,0.08);
     }
     .logo-text {
-      background: linear-gradient(135deg, var(--color4) 0%, var(--color3) 100%);
+      font-family: 'IBM Plex Sans', 'Quicksand', 'Segoe UI', Arial, sans-serif;
+      background: linear-gradient(135deg, var(--color3) 0%, var(--color1) 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
       filter: drop-shadow(0 2px 8px rgba(208,167,123,0.15));
+      font-weight: bold;
     }
     h1, h2, h3, h4, h5, h6, .about-title, .services-title {
-      font-family: 'Quicksand', 'Segoe UI', Arial, sans-serif;
+      font-family: 'IBM Plex Sans', 'Quicksand', 'Segoe UI', Arial, sans-serif;
       font-weight: 600;
     }
-    button, .tab-modal-content button, .tab-btn, .contact-form button, .services button {
-      font-family: 'Quicksand', 'Segoe UI', Arial, sans-serif;
+    button, .nav-btn, .contact-form button, .services button {
+      font-family: 'IBM Plex Sans', 'Quicksand', 'Segoe UI', Arial, sans-serif;
       font-weight: 600;
     }
-    .about-text, .services-desc, .contact-form input, .contact-form textarea, .tab-modal-content, section, p, label, .about {
-      font-family: 'Quicksand', 'Segoe UI', Arial, sans-serif;
+    .about-text, .services-desc, .contact-form input, .contact-form textarea, section, p, label, .about {
+      font-family: 'IBM Plex Sans', 'Quicksand', 'Segoe UI', Arial, sans-serif;
     }
     #molecule-canvas {
       width: 90px;
@@ -184,7 +201,7 @@
       width: 100%;
       padding: 1rem 1.5rem;
       font-size: 1.1rem;
-      font-family: 'Quicksand', 'Segoe UI', Arial, sans-serif;
+      font-family: 'IBM Plex Sans', 'Quicksand', 'Segoe UI', Arial, sans-serif;
       background: rgba(255, 255, 255, 0.8);
       color: var(--color4);
       border: 1px solid var(--glass-border);
@@ -302,55 +319,91 @@
       to { opacity: 1; transform: none; }
     }
     .services {
-      background: var(--color6);
-      border-radius: 12px;
+      background: linear-gradient(135deg, var(--color6) 0%, var(--color5) 100%);
+      border-radius: 18px;
       text-align: center;
-      box-shadow: 0 2px 12px rgba(114,92,63,0.06);
+      box-shadow: 0 8px 32px 0 rgba(114,92,63,0.15);
       position: relative;
-      background: transparent;
-      padding: 3.5rem 2rem;
+      padding: 4rem 2rem;
+      border: 2px solid var(--glass-border);
+      overflow: hidden;
+    }
+    .services::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(45deg, transparent 30%, rgba(255,255,255,0.1) 50%, transparent 70%);
+      animation: shimmer 3s infinite;
+      pointer-events: none;
+    }
+    @keyframes shimmer {
+      0% { transform: translateX(-100%); }
+      100% { transform: translateX(100%); }
     }
     .services-title {
-      font-size: 2rem;
-      margin-bottom: 1.2rem;
-      font-weight: 600;
+      font-size: 2.5rem;
+      margin-bottom: 1.5rem;
+      font-weight: 700;
       color: var(--color4);
-      text-shadow: 0 2px 12px rgba(208,167,123,0.08);
+      text-shadow: 0 2px 12px rgba(208,167,123,0.15);
+      position: relative;
+      z-index: 1;
     }
     .services-desc {
-      font-size: 1.1rem;
-      margin-bottom: 2.2rem;
-      line-height: 1.6;
+      font-size: 1.2rem;
+      margin-bottom: 3rem;
+      line-height: 1.7;
       color: var(--color4);
-      opacity: 0.9;
+      opacity: 0.95;
+      position: relative;
+      z-index: 1;
     }
     .get-started-row {
       display: flex;
       align-items: center;
       justify-content: center;
       gap: 1.5rem;
-      margin-top: 1.5rem;
+      margin-top: 2rem;
+      position: relative;
+      z-index: 1;
     }
     .services button {
-      font-family: 'Quicksand', 'Segoe UI', Arial, sans-serif;
-      transition: background 0.3s, transform 0.2s, box-shadow 0.2s, filter 0.3s;
-      filter: drop-shadow(0 2px 8px rgba(208,167,123,0.10));
-      background: var(--color3);
+      font-family: 'IBM Plex Sans', 'Quicksand', 'Segoe UI', Arial, sans-serif;
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      background: linear-gradient(135deg, var(--color1) 0%, var(--color3) 100%);
       color: var(--color4);
       border: none;
-      border-radius: 12px;
-      padding: 1rem 2.5rem;
-      font-size: 1.1rem;
-      font-weight: 600;
+      border-radius: 16px;
+      padding: 1.2rem 3rem;
+      font-size: 1.3rem;
+      font-weight: 700;
       cursor: pointer;
-      box-shadow: 0 4px 16px rgba(208,167,123,0.15);
+      box-shadow: 0 8px 24px rgba(208,167,123,0.25);
       position: relative;
       overflow: hidden;
+      text-transform: uppercase;
+      letter-spacing: 1px;
     }
     .services button:hover {
-      background: var(--color1);
-      transform: translateY(-4px) scale(1.02);
-      box-shadow: 0 8px 24px rgba(208,167,123,0.25);
+      background: linear-gradient(135deg, var(--color3) 0%, var(--color1) 100%);
+      transform: translateY(-6px) scale(1.05);
+      box-shadow: 0 12px 32px rgba(208,167,123,0.35);
+    }
+    .services button::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+      transition: left 0.6s;
+    }
+    .services button:hover::before {
+      left: 100%;
     }
     .contact-form {
       display: flex;
@@ -367,7 +420,7 @@
       box-shadow: 0 8px 32px rgba(114,92,63,0.08);
     }
     .contact-form input, .contact-form textarea {
-      font-family: 'Quicksand', 'Segoe UI', Arial, sans-serif;
+      font-family: 'IBM Plex Sans', 'Quicksand', 'Segoe UI', Arial, sans-serif;
       padding: 1rem 1.2rem;
       border: 1.5px solid var(--glass-border);
       border-radius: 12px;
@@ -389,7 +442,7 @@
       opacity: 0.7;
     }
     .contact-form button {
-      font-family: 'Quicksand', 'Segoe UI', Arial, sans-serif;
+      font-family: 'IBM Plex Sans', 'Quicksand', 'Segoe UI', Arial, sans-serif;
       background: var(--color3);
       color: var(--color4);
       border: none;
@@ -439,9 +492,15 @@
       .about-img {
         justify-content: center;
       }
-      .header-center {
-        flex-direction: column;
+      .header-left {
         gap: 1rem;
+      }
+      .header-right {
+        gap: 0.8rem;
+      }
+      .nav-btn {
+        padding: 0.6rem 1rem;
+        font-size: 0.9rem;
       }
       .logo {
         font-size: 2rem;
@@ -459,25 +518,25 @@
   <canvas class="bg-bubbles" id="bg-bubbles"></canvas>
   <!-- Header -->
   <header>
-    <button class="hamburger-btn" id="openTabModal" aria-label="Open navigation">
-      <span></span>
-      <span></span>
-      <span></span>
-    </button>
-    <div class="header-center">
+    <div class="header-left">
       <div class="logo logo-text">depHy</div>
       <canvas id="molecule-canvas"></canvas>
     </div>
-    <div class="tab-modal" id="tabModal">
-      <div class="tab-modal-content">
-        <h3 style="font-size: 1.8rem; font-weight: 600; margin-bottom: 2rem; color: var(--color4); text-align: center;">Navigation</h3>
-        <button onclick="showTab('about')">About</button>
-        <button onclick="showTab('services')">Services</button>
-        <button onclick="showTab('contact')">Contact</button>
-        <button class="close-modal" id="closeTabModal">Close</button>
-      </div>
+    <div class="header-right">
+      <button class="nav-btn" onclick="showTab('services')">Services</button>
+      <button class="nav-btn primary" onclick="showTab('about')">About</button>
+      <button class="nav-btn contact-btn" onclick="showTab('contact')">Contact</button>
     </div>
   </header>
+
+  <!-- Services Section -->
+  <section id="services" class="services">
+    <div class="services-title">Our Services</div>
+    <div class="services-desc">We provide advanced tools and insights to help you optimize your chemical reactions. Get started with depHy and revolutionize your workflow today!</div>
+    <div class="get-started-row">
+      <button onclick="window.location.href='get-started.html'">Get Started</button>
+    </div>
+  </section>
 
   <!-- About Section -->
   <section id="about" class="about">
@@ -487,25 +546,16 @@
         <p>depHy is a cutting-edge platform designed to predict and optimize basic chemical reactions, helping you save resources and money. Our mission is to make chemical processes more efficient and sustainable for everyone.</p>
       </div>
       <div class="about-img">
-        <img src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=400&q=80" alt="Chemistry Lab">
+        <img src="https://images.unsplash.com/photo-1464983953574-0892a716854b?auto=format&fit=crop&w=400&q=80" alt="Chemistry Glassware">
       </div>
-    </div>
-  </section>
-
-  <!-- Services Section -->
-  <section id="services" class="services">
-    <div class="services-title">Our Services</div>
-    <div class="services-desc">We provide advanced tools and insights to help you optimize your chemical reactions. Get started with depHy and revolutionize your workflow today!</div>
-    <div class="get-started-row">
-      <button onclick="window.location.href='#contact'">Get Started</button>
     </div>
   </section>
 
   <!-- Contact Section -->
   <section id="contact">
-    <h2 style="font-family: 'Quicksand', 'Segoe UI', Arial, sans-serif; text-align:center;">Contact Us</h2>
+    <h2 style="font-family: 'IBM Plex Sans', 'Quicksand', 'Segoe UI', Arial, sans-serif; text-align:center;">Contact Us</h2>
     <p style="text-align:center;">Have questions or want to learn more? Reach out to us using the form below.</p>
-    <form class="contact-form">
+    <form class="contact-form" action="mailto:courtney.goss@gmail.com" method="POST" enctype="text/plain">
       <input type="text" name="name" placeholder="Your Name" required>
       <input type="email" name="email" placeholder="Your Email" required>
       <textarea name="message" rows="5" placeholder="Your Message" required></textarea>
@@ -577,44 +627,9 @@
     }
     animate();
 
-    // Tab modal logic
-    const tabModal = document.getElementById('tabModal');
-    const openTabModal = document.getElementById('openTabModal');
-    const closeTabModal = document.getElementById('closeTabModal');
-    console.log('Elements found:', { tabModal, openTabModal, closeTabModal });
-    
-    openTabModal.onclick = () => {
-      console.log('Hamburger button clicked!');
-      tabModal.classList.add('active');
-      document.body.style.overflow = 'hidden';
-    };
-    closeTabModal.onclick = () => {
-      console.log('Close button clicked!');
-      tabModal.classList.remove('active');
-      document.body.style.overflow = 'auto';
-    };
-    
-    // Alternative event listener method
-    openTabModal.addEventListener('click', function(e) {
-      console.log('Hamburger button clicked (addEventListener)!');
-      e.preventDefault();
-      tabModal.classList.add('active');
-      document.body.style.overflow = 'hidden';
-    });
-    
-    // Close modal when clicking outside
-    tabModal.addEventListener('click', (e) => {
-      if (e.target === tabModal) {
-        console.log('Clicked outside modal!');
-        tabModal.classList.remove('active');
-        document.body.style.overflow = 'auto';
-      }
-    });
     function showTab(tab) {
       console.log('Showing tab:', tab);
-      tabModal.classList.remove('active');
-      document.body.style.overflow = 'auto';
-      document.getElementById('about').scrollIntoView({ behavior: 'smooth' });
+      if(tab === 'about') document.getElementById('about').scrollIntoView({ behavior: 'smooth' });
       if(tab === 'services') document.getElementById('services').scrollIntoView({ behavior: 'smooth' });
       if(tab === 'contact') document.getElementById('contact').scrollIntoView({ behavior: 'smooth' });
     }
