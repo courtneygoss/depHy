@@ -370,6 +370,8 @@
     }
   </style>
   <script src="https://cdn.jsdelivr.net/npm/three@0.153.0/build/three.min.js"></script>
+  <script src="https://unpkg.com/kekule/dist/kekule.js?module"></script>
+  <link rel="stylesheet" href="https://unpkg.com/kekule/dist/themes/default/kekule.css">
 </head>
 <body>
   <canvas class="bg-bubbles" id="bg-bubbles"></canvas>
@@ -387,9 +389,60 @@
   <main>
     <h1>Get Started with depHy</h1>
     <div class="desc">Select the molecules or elements you want to react, and we'll provide optimal conditions and balanced equations.</div>
+    <button id="examplesBtn" style="margin: 0 auto 1.5rem auto; display: block; background: var(--color3); color: var(--color4); border: none; border-radius: 10px; padding: 0.8rem 2rem; font-size: 1.1rem; font-weight: 600; box-shadow: 0 2px 8px rgba(114,92,63,0.10); cursor: pointer; transition: background 0.3s, transform 0.2s;">Examples & Charge Rules</button>
+    <div id="examplesModal" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(229,224,216,0.45); z-index:10000; backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);">
+      <div style="max-width: 540px; margin: 5vh auto; background: var(--glass-bg); border-radius: 18px; box-shadow: 0 8px 32px 0 rgba(114,92,63,0.18); border: 1.5px solid var(--glass-border); padding: 2.2rem 2rem 1.5rem 2rem; position: relative;">
+        <button id="closeExamplesModal" style="position:absolute; top:18px; right:18px; background:var(--color3); color:var(--color4); border:none; border-radius:8px; padding:0.4rem 1rem; font-size:1rem; font-weight:600; cursor:pointer;">Close</button>
+        <h2 style="margin-top:0; color:var(--color4); font-size:1.5rem; text-align:center;">Reaction Examples & Charge Rules</h2>
+        <div style="margin-bottom:1.2rem;">
+          <strong>Common Reaction Examples:</strong>
+          <ul style="margin:0.7rem 0 1.2rem 1.2rem;">
+            <li>2H<sub>2</sub> + O<sub>2</sub> → 2H<sub>2</sub>O</li>
+            <li>N<sub>2</sub> + 3H<sub>2</sub> → 2NH<sub>3</sub></li>
+            <li>C + O<sub>2</sub> → CO<sub>2</sub></li>
+            <li>2Na + Cl<sub>2</sub> → 2NaCl</li>
+            <li>HCl + NaOH → NaCl + H<sub>2</sub>O</li>
+            <li>Zn + 2HCl → ZnCl<sub>2</sub> + H<sub>2</sub></li>
+            <li>AgNO<sub>3</sub> + NaCl → AgCl↓ + NaNO<sub>3</sub></li>
+          </ul>
+        </div>
+        <div style="margin-bottom:1.2rem;">
+          <strong>Common Ion Charges (AP Chem):</strong>
+          <table style="width:100%; border-collapse:collapse; background:rgba(255,255,255,0.15); border-radius:8px;">
+            <tr><th style="text-align:left; padding:4px;">Element/Ion</th><th style="text-align:left; padding:4px;">Charge</th></tr>
+            <tr><td>Group 1 (Na, K, Li, etc.)</td><td>+1</td></tr>
+            <tr><td>Group 2 (Ca, Mg, Ba, etc.)</td><td>+2</td></tr>
+            <tr><td>Aluminum (Al)</td><td>+3</td></tr>
+            <tr><td>Silver (Ag)</td><td>+1</td></tr>
+            <tr><td>Zinc (Zn)</td><td>+2</td></tr>
+            <tr><td>Iron (Fe)</td><td>+2 or +3</td></tr>
+            <tr><td>Copper (Cu)</td><td>+1 or +2</td></tr>
+            <tr><td>Nonmetals (F, Cl, Br, I)</td><td>-1</td></tr>
+            <tr><td>Oxygen (O)</td><td>-2</td></tr>
+            <tr><td>Nitrogen (N)</td><td>-3 (in nitrides)</td></tr>
+            <tr><td>Sulfur (S)</td><td>-2</td></tr>
+          </table>
+        </div>
+        <div style="text-align:center; margin-bottom:1.2rem;">
+          <button id="showPeriodicTableBtn" style="background: var(--color3); color: var(--color4); border: none; border-radius: 8px; padding: 0.7rem 1.5rem; font-size: 1.05rem; font-weight: 600; cursor: pointer; box-shadow: 0 2px 8px rgba(114,92,63,0.10); transition: background 0.2s;">Periodic Table</button>
+        </div>
+
+        <!-- Periodic Table Modal -->
+        <div id="periodicTableModal" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(229,224,216,0.45); z-index:10001; backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);">
+          <div style="max-width: 700px; margin: 6vh auto; background: var(--glass-bg); border-radius: 18px; box-shadow: 0 8px 32px 0 rgba(114,92,63,0.18); border: 1.5px solid var(--glass-border); padding: 2.2rem 2rem 1.5rem 2rem; position: relative; text-align:center;">
+            <button id="closePeriodicTableModal" style="position:absolute; top:18px; right:18px; background:var(--color3); color:var(--color4); border:none; border-radius:8px; padding:0.4rem 1rem; font-size:1rem; font-weight:600; cursor:pointer;">Close</button>
+            <h3 style="margin-top:0; color:var(--color4); font-size:1.3rem; text-align:center;">Periodic Table</h3>
+            <img src="periodic table.jpg" alt="Periodic Table" style="max-width: 100%; height: auto; border-radius: 8px; box-shadow: 0 2px 8px rgba(114,92,63,0.10); margin-top: 1rem;">
+          </div>
+        </div>
+        <div style="font-size:0.98rem; color:var(--color4); margin-bottom:0.7rem;">
+          <strong>Rule of Thumb:</strong> For a reaction to form a neutral compound, the total charge of all ions must sum to zero. For example, Na<sup>+</sup> (+1) and Cl<sup>-</sup> (-1) combine to make NaCl (0 net charge).<br>
+          <em>Try combining a metal (positive charge) with a nonmetal (negative charge) for classic synthesis reactions!</em>
+        </div>
+      </div>
+    </div>
     <div class="molecule-selection">
-      <h3>Step 1: Select Molecules/Elements</h3>
-      <p>Choose the molecules or elements you want to react:</p>
+      <p><strong>Choose the molecules or elements you want to react:</strong></p>
       
       <div class="molecule-grid">
         <!-- Gases -->
@@ -468,23 +521,49 @@
         <div id="selected-list" class="selected-list"></div>
       </div>
     </div>
-          <form id="predictionForm">
-        <div class="temperature-toggle">
-          <label>Temperature Unit:</label>
-          <div class="toggle-buttons">
-            <button type="button" class="temp-btn active" data-unit="celsius">°C</button>
-            <button type="button" class="temp-btn" data-unit="kelvin">K</button>
-          </div>
+    <!-- Model-based prediction form -->
+    <div id="model-predict-form" style="display:none; margin-top:2rem;">
+      <h3>Or: Enter Reaction Conditions Directly</h3>
+      <form id="directPredictionForm">
+        <div class="form-group">
+          <label for="pressureInput">Pressure (atm):</label>
+          <input type="number" id="pressureInput" name="pressure" min="0.5" max="3.0" step="0.01" required>
         </div>
-        <button type="submit" id="submitBtn">Find Optimal Reaction Conditions</button>
+        <div class="form-group">
+          <label for="concAInput">Concentration A (mol/L):</label>
+          <input type="number" id="concAInput" name="concentration_A" min="0.1" max="1.0" step="0.01" required>
+        </div>
+        <div class="form-group">
+          <label for="concBInput">Concentration B (mol/L):</label>
+          <input type="number" id="concBInput" name="concentration_B" min="0.1" max="1.0" step="0.01" required>
+        </div>
+        <div class="form-group">
+          <label for="catalystInput">Catalyst:</label>
+          <select id="catalystInput" name="catalyst" required>
+            <option value="yes">Yes</option>
+            <option value="no">No</option>
+          </select>
+        </div>
+        <button type="submit" id="directSubmitBtn">Predict Outcome</button>
       </form>
+    </div>
+    <!-- Restore the Contact Us form at the bottom of the page -->
+    <form id="predictionForm">
+      <div class="temperature-toggle">
+        <label>Temperature Unit:</label>
+        <div class="toggle-buttons">
+          <button type="button" class="temp-btn active" data-unit="celsius">°C</button>
+          <button type="button" class="temp-btn" data-unit="kelvin">K</button>
+        </div>
+      </div>
+      <button type="submit" id="submitBtn">Find Optimal Reaction Conditions</button>
+    </form>
     <div id="result" class="result" style="display: none;">
       <h3>Optimal Reaction Conditions</h3>
       <div id="resultContent"></div>
     </div>
   </main>
   <footer>
-    <div style="margin-top: 1rem; font-size: 0.95rem;">&copy; 2024 depHy. All rights reserved.</div>
   </footer>
   <script>
     // 3D Molecule Animation using Three.js (same as index.html)
@@ -584,8 +663,8 @@
     // Global variables for temperature unit and selected molecules
     let currentTempUnit = 'celsius';
     let selectedMolecules = new Set();
-    let reactionData = null;
-    
+    let lastApiData = null;
+
     // Handle checkbox selection
     document.querySelectorAll('.molecule-category input[type="checkbox"]').forEach(checkbox => {
       checkbox.addEventListener('change', function() {
@@ -604,7 +683,9 @@
         document.querySelectorAll('.temp-btn').forEach(b => b.classList.remove('active'));
         this.classList.add('active');
         currentTempUnit = this.dataset.unit;
-        updateTemperatureDisplay();
+        if (lastApiData) {
+          renderResults(lastApiData);
+        }
       });
     });
     
@@ -654,6 +735,46 @@
       }
     }
     
+    const API_URL = "http://127.0.0.1:5001"; // Use 127.0.0.1 for best compatibility on Mac
+
+    function renderResults(data) {
+      let html = '';
+      if (data.balanced_equation) {
+        html += `<div class="equation-display" style="background:rgba(255,255,255,0.25);border-radius:12px;padding:18px 0;font-size:1.5rem;font-weight:700;text-align:center;margin-bottom:18px;box-shadow:0 2px 12px rgba(208,167,123,0.10);letter-spacing:1px;">${data.balanced_equation}</div>`;
+      }
+      if (data.optimal_conditions && data.selected_elements && data.selected_elements.length >= 2) {
+        const elA = data.selected_elements[0];
+        const elB = data.selected_elements[1];
+        let tempC = data.optimal_conditions.temperature;
+        let tempK = (parseFloat(tempC) + 273.15).toFixed(2);
+        let tempDisplay = currentTempUnit === 'kelvin' ? `${tempK} K` : `${tempC} °C`;
+        html += `<div class="conditions-grid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:18px;margin:18px 0;">`;
+        html += `<div class="condition-card" style="background:rgba(229,224,216,0.45);border-radius:12px;padding:18px;text-align:center;box-shadow:0 2px 8px rgba(208,167,123,0.08);"><h4 style="margin:0 0 8px 0;font-size:1.1rem;">Optimal Temperature</h4><p style="font-size:1.3rem;font-weight:600;">${tempDisplay}</p></div>`;
+        html += `<div class="condition-card" style="background:rgba(229,224,216,0.45);border-radius:12px;padding:18px;text-align:center;box-shadow:0 2px 8px rgba(208,167,123,0.08);"><h4 style="margin:0 0 8px 0;font-size:1.1rem;">Optimal Pressure</h4><p style="font-size:1.3rem;font-weight:600;">${data.optimal_conditions.pressure} atm</p></div>`;
+        html += `<div class="condition-card" style="background:rgba(229,224,216,0.45);border-radius:12px;padding:18px;text-align:center;box-shadow:0 2px 8px rgba(208,167,123,0.08);"><h4 style="margin:0 0 8px 0;font-size:1.1rem;">Concentration of ${elA}</h4><p style="font-size:1.3rem;font-weight:600;">${data.optimal_conditions.concentration_A} mol/L</p></div>`;
+        html += `<div class="condition-card" style="background:rgba(229,224,216,0.45);border-radius:12px;padding:18px;text-align:center;box-shadow:0 2px 8px rgba(208,167,123,0.08);"><h4 style="margin:0 0 8px 0;font-size:1.1rem;">Concentration of ${elB}</h4><p style="font-size:1.3rem;font-weight:600;">${data.optimal_conditions.concentration_B} mol/L</p></div>`;
+        html += `<div class="condition-card" style="background:rgba(229,224,216,0.45);border-radius:12px;padding:18px;text-align:center;box-shadow:0 2px 8px rgba(208,167,123,0.08);"><h4 style="margin:0 0 8px 0;font-size:1.1rem;">Recommended Catalyst</h4><p style="font-size:1.3rem;font-weight:600;">${data.optimal_conditions.catalyst}</p></div>`;
+        html += `<div class="condition-card" style="background:rgba(229,224,216,0.45);border-radius:12px;padding:18px;text-align:center;box-shadow:0 2px 8px rgba(208,167,123,0.08);"><h4 style="margin:0 0 8px 0;font-size:1.1rem;">Expected Success Rate</h4><p style="font-size:1.3rem;font-weight:600;">${(data.optimal_conditions.success_rate*100).toFixed(1)}%</p></div>`;
+        html += `</div>`;
+      }
+      if (data.notes) {
+        html += `<div style="margin-top: 20px; padding: 15px; background: rgba(255,255,255,0.1); border-radius: 8px;">
+          <h4 style="margin-top: 0; color: var(--color4);">Reaction Notes:</h4>
+          <div>${data.notes}</div>
+        </div>`;
+      }
+      html += `<div style="text-align:center; margin-top: 24px;"><button id="needHelpBtn" style="background: var(--color1); color: var(--color4); border: none; border-radius: 8px; padding: 0.7rem 1.5rem; font-size: 1.05rem; font-weight: 600; cursor: pointer; box-shadow: 0 2px 8px rgba(114,92,63,0.10); transition: background 0.2s;">Definitions</button></div>`;
+      document.getElementById('resultContent').innerHTML = html;
+
+      // Attach event listener for Definitions button immediately after rendering
+      const needHelpBtn = document.getElementById('needHelpBtn');
+      if (needHelpBtn) {
+        needHelpBtn.onclick = function() {
+          document.getElementById('helpModal').style.display = 'block';
+        };
+      }
+    }
+
     // Prediction form handler
     document.getElementById('predictionForm').addEventListener('submit', async function(e) {
       e.preventDefault();
@@ -680,7 +801,11 @@
       };
       
       try {
-        const response = await fetch('http://localhost:5001/predict-reaction', {
+        // Check API status before making the request
+        const pingRes = await fetch(API_URL + '/ping');
+        if (!pingRes.ok) throw new Error('API not available');
+
+        const response = await fetch(API_URL + '/predict-reaction', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -691,54 +816,8 @@
         const data = await response.json();
         
         if (response.ok) {
-          // Store reaction data for temperature toggle
-          reactionData = data;
-          
-          // Display results
-          let html = `
-            <div class="selected-elements">
-              <strong>Selected Elements:</strong> ${data.selected_elements.join(' + ')}
-            </div>
-            
-            <div class="equation-display">
-              ${data.balanced_equation}
-            </div>
-            
-            <div class="success-rate">
-              Expected Success Rate: ${(data.optimal_conditions.success_rate * 100).toFixed(1)}%
-            </div>
-            
-            <div class="conditions-grid">
-              <div class="condition-card">
-                <h4>Optimal Temperature</h4>
-                <p>${currentTempUnit === 'celsius' ? data.optimal_conditions.temperature_celsius + ' °C' : data.optimal_conditions.temperature_kelvin + ' K'}</p>
-                <small>Range: ${currentTempUnit === 'celsius' ? data.recommendations.temperature_range_celsius : data.recommendations.temperature_range_kelvin}</small>
-              </div>
-              
-              <div class="condition-card">
-                <h4>Optimal Pressure</h4>
-                <p>${data.optimal_conditions.pressure} atm</p>
-                <small>Range: ${data.recommendations.pressure_range}</small>
-              </div>
-              
-              <div class="condition-card">
-                <h4>Recommended Catalyst</h4>
-                <p>${data.recommendations.catalyst_notes}</p>
-              </div>
-            </div>
-            
-            <div style="margin-top: 20px; padding: 15px; background: rgba(255,255,255,0.1); border-radius: 8px;">
-              <h4 style="margin-top: 0; color: var(--color4);">Reaction Notes:</h4>
-              <ul style="margin: 0; padding-left: 20px;">
-                <li>This reaction is optimized for maximum yield and efficiency</li>
-                <li>Follow safety protocols when working with these conditions</li>
-                <li>Monitor the reaction progress and adjust if necessary</li>
-                <li>Temperature can be toggled between Celsius and Kelvin using the buttons above</li>
-              </ul>
-            </div>
-          `;
-          
-          resultContent.innerHTML = html;
+          lastApiData = data;
+          renderResults(data);
           resultDiv.className = 'result';
         } else {
           resultContent.innerHTML = `<div class="error"><strong>Error:</strong> ${data.error}</div>`;
@@ -749,7 +828,7 @@
         resultContent.innerHTML = `
           <div class="error">
             <strong>Connection Error:</strong> Could not connect to the API. 
-            Make sure the Flask server is running on http://localhost:5001
+            Make sure the Flask server is running on <code>${API_URL}</code>
           </div>
         `;
         resultDiv.className = 'result error';
@@ -758,6 +837,88 @@
         submitBtn.textContent = 'Find Optimal Reaction Conditions';
       }
     });
+
+    document.getElementById('examplesBtn').addEventListener('click', function() {
+      document.getElementById('examplesModal').style.display = 'block';
+    });
+    document.getElementById('closeExamplesModal').addEventListener('click', function() {
+      document.getElementById('examplesModal').style.display = 'none';
+    });
+    window.addEventListener('click', function(e) {
+      const modal = document.getElementById('examplesModal');
+      if (e.target === modal) modal.style.display = 'none';
+    });
+
+    // Periodic Table Modal Logic
+    document.getElementById('showPeriodicTableBtn').addEventListener('click', function() {
+      document.getElementById('periodicTableModal').style.display = 'block';
+    });
+    document.getElementById('closePeriodicTableModal').addEventListener('click', function() {
+      document.getElementById('periodicTableModal').style.display = 'none';
+    });
+    window.addEventListener('click', function(e) {
+      const modal = document.getElementById('periodicTableModal');
+      if (e.target === modal) modal.style.display = 'none';
+    });
+
+    // Add Need Help Modal to the page if not already present
+    if (!document.getElementById('helpModal')) {
+      const modal = document.createElement('div');
+      modal.id = 'helpModal';
+      modal.style.display = 'none';
+      modal.style.position = 'fixed';
+      modal.style.top = '0';
+      modal.style.left = '0';
+      modal.style.width = '100vw';
+      modal.style.height = '100vh';
+      modal.style.background = 'rgba(229,224,216,0.45)';
+      modal.style.zIndex = '10001';
+      modal.style.backdropFilter = 'blur(8px)';
+      modal.style.webkitBackdropFilter = 'blur(8px)';
+      modal.innerHTML = `
+        <div style="max-width: 900px; margin: 7vh auto; background: var(--glass-bg); border-radius: 18px; box-shadow: 0 8px 32px 0 rgba(114,92,63,0.18); border: 1.5px solid var(--glass-border); padding: 2.2rem 2rem 1.5rem 2rem; position: relative; text-align:left;">
+          <button id="closeHelpModal" style="position:absolute; top:18px; right:18px; background:var(--color3); color:var(--color4); border:none; border-radius:8px; padding:0.4rem 1rem; font-size:1rem; font-weight:600; cursor:pointer;">Close</button>
+          <h3 style="margin-top:0; color:var(--color4); font-size:1.3rem; text-align:center;">Chemistry Terms Help</h3>
+          <ul style="margin-top:1.5rem; font-size:1.08rem; color:var(--color4); line-height:1.7;">
+            <li><strong>Exothermic:</strong> A reaction that releases heat to its surroundings.</li>
+            <li><strong>Endothermic:</strong> A reaction that absorbs heat from its surroundings.</li>
+            <li><strong>Synthesis:</strong> A reaction where two or more substances combine to form a single product.</li>
+            <li><strong>Catalyst:</strong> A substance that speeds up a chemical reaction without being consumed.</li>
+            <li><strong>Reactant:</strong> A starting substance in a chemical reaction.</li>
+            <li><strong>Product:</strong> A substance formed as a result of a chemical reaction.</li>
+            <li><strong>Ion:</strong> An atom or molecule with a net electric charge due to the loss or gain of electrons.</li>
+            <li><strong>Precipitate:</strong> A solid that forms and settles out of a liquid mixture during a reaction.</li>
+            <li><strong>Oxidation:</strong> The loss of electrons during a reaction by a molecule, atom, or ion.</li>
+            <li><strong>Reduction:</strong> The gain of electrons during a reaction by a molecule, atom, or ion.</li>
+            <li><strong>Equilibrium:</strong> The state in which the forward and reverse reactions occur at the same rate.</li>
+            <li><strong>Concentration:</strong> The amount of a substance in a given volume.</li>
+            <li><strong>Activation Energy:</strong> The minimum energy required to start a chemical reaction.</li>
+            <li><strong>Heat:</strong> A form of energy that is transferred between systems or objects with different temperatures (flows from hot to cold).</li>
+            <li><strong>Haber process:</strong> An industrial process for synthesizing ammonia (NH₃) from nitrogen (N₂) and hydrogen (H₂) gases under high temperature and pressure, using an iron catalyst.</li>
+          </ul>
+        </div>
+      `;
+      document.body.appendChild(modal);
+    }
+    // Add event listener for Need Help button
+    setTimeout(() => {
+      const needHelpBtn = document.getElementById('needHelpBtn');
+      if (needHelpBtn) {
+        needHelpBtn.onclick = function() {
+          document.getElementById('helpModal').style.display = 'block';
+        };
+      }
+      const closeHelpModal = document.getElementById('closeHelpModal');
+      if (closeHelpModal) {
+        closeHelpModal.onclick = function() {
+          document.getElementById('helpModal').style.display = 'none';
+        };
+      }
+      window.addEventListener('click', function(e) {
+        const modal = document.getElementById('helpModal');
+        if (e.target === modal) modal.style.display = 'none';
+      });
+    }, 0);
   </script>
 </body>
 </html> 

@@ -28,74 +28,51 @@ def check_dependencies():
         return False
 
 def start_api():
-    """Start the Flask API in a separate thread"""
+    print("[depHy] Attempting to start the API server...")
     try:
-        subprocess.run([sys.executable, "app.py"], check=True)
-    except KeyboardInterrupt:
-        print("\nAPI server stopped.")
-    except Exception as e:
-        print(f"\nError starting API: {e}")
-
-def wait_for_api():
-    """Wait for the API to be ready"""
-    import requests
-    max_attempts = 30
-    for attempt in range(max_attempts):
-        try:
-            response = requests.get("http://localhost:5001/health", timeout=2)
-            if response.status_code == 200:
-                print("✓ API is ready!")
-                return True
-        except:
-            pass
-        time.sleep(1)
-        if attempt % 5 == 0:
-            print(f"Waiting for API... ({attempt + 1}/{max_attempts})")
-    return False
-
-def main():
-    print("=" * 60)
-    print("depHy Chemical Reaction Prediction Website")
-    print("=" * 60)
-    
-    # Check dependencies
-    if not check_dependencies():
-        sys.exit(1)
-    
-    print("\nStarting depHy API server...")
-    print("The API will be available at: http://localhost:5001")
-    
-    # Start API in background thread
-    api_thread = threading.Thread(target=start_api, daemon=True)
-    api_thread.start()
-    
-    # Wait for API to be ready
-    print("Waiting for API to start...")
-    if not wait_for_api():
-        print("✗ Failed to start API. Please check for errors.")
-        sys.exit(1)
-    
-    # Open website
-    print("\nOpening depHy website...")
-    website_path = os.path.abspath("index.html")
-    webbrowser.open(f"file://{website_path}")
-    
-    print("\n" + "=" * 60)
-    print("depHy is now running!")
-    print("=" * 60)
-    print("• Website: Open index.html in your browser")
-    print("• API: http://localhost:5001")
-    print("• Get Started: Click 'Get Started' on the website")
-    print("\nPress Ctrl+C to stop the API server")
-    print("-" * 60)
-    
-    try:
-        # Keep the main thread alive
-        while True:
+        proc = subprocess.Popen([sys.executable, "app.py"])
+        print("[depHy] API server process started (PID: {}), waiting for server to be ready...".format(proc.pid))
+        for i in range(10):
             time.sleep(1)
-    except KeyboardInterrupt:
-        print("\n\nShutting down depHy...")
-        print("✓ depHy stopped successfully.")
+            try:
+                import requests
+                r = requests.get("http://localhost:5001/ping", timeout=1)
+                if r.ok:
+                    print("[depHy] API is up and responding at http://localhost:5001")
+                    return proc
+            except Exception as e:
+                print(f"[depHy] Waiting for API... ({i+1}/10)")
+        else:
+            print("[depHy] API did not respond after 10 seconds. Check app.py for errors.")
+    except Exception as e:
+        print(f"[depHy] Failed to start API: {e}")
+    return None
+
+def start_website():
+    print("[depHy] Starting website server at http://localhost:8000 ...")
+    try:
+        subprocess.run([sys.executable, "-m", "http.server", "8000"], check=True)
+    except Exception as e:
+        print(f"[depHy] Failed to start website server: {e}")
 
 if __name__ == "__main__":
-    main() 
+    import argparse
+    parser = argparse.ArgumentParser(description="Start depHy API and/or website server.")
+    parser.add_argument('--api', action='store_true', help='Start only the API server')
+    parser.add_argument('--website', action='store_true', help='Start only the website server')
+    parser.add_argument('--both', action='store_true', help='Start both API and website (default)')
+    args = parser.parse_args()
+
+    if args.api:
+        start_api()
+    elif args.website:
+        start_website()
+    else:
+        # Default: start both
+        api_proc = start_api()
+        print("[depHy] Launching website server in 2 seconds...")
+        time.sleep(2)
+        start_website()
+        if api_proc:
+            print("[depHy] Shutting down API server...")
+            api_proc.terminate() 

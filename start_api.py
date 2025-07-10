@@ -47,4 +47,22 @@ def main():
         sys.exit(1)
 
 if __name__ == "__main__":
-    main() 
+    print("[depHy] Attempting to start the API server...")
+    try:
+        proc = subprocess.Popen([sys.executable, "app.py"])
+        print("[depHy] API server process started (PID: {}), waiting for server to be ready...".format(proc.pid))
+        # Wait a few seconds for the server to start
+        for i in range(10):
+            time.sleep(1)
+            try:
+                import requests
+                r = requests.get("http://localhost:5001/ping", timeout=1)
+                if r.ok:
+                    print("[depHy] API is up and responding at http://localhost:5001")
+                    break
+            except Exception as e:
+                print(f"[depHy] Waiting for API... ({i+1}/10)")
+        else:
+            print("[depHy] API did not respond after 10 seconds. Check app.py for errors.")
+    except Exception as e:
+        print(f"[depHy] Failed to start API: {e}") 

@@ -541,12 +541,12 @@
   <!-- About Section -->
   <section id="about" class="about">
     <div class="about-title">About depHy</div>
-    <div class="about-content-row">
+    <div class="about-content-row" style="align-items: stretch; min-height: 220px; display: flex;">
       <div class="about-text">
         <p>depHy is a cutting-edge platform designed to predict and optimize basic chemical reactions, helping you save resources and money. Our mission is to make chemical processes more efficient and sustainable for everyone.</p>
       </div>
-      <div class="about-img">
-        <img src="https://images.unsplash.com/photo-1464983953574-0892a716854b?auto=format&fit=crop&w=400&q=80" alt="Chemistry Glassware">
+      <div class="about-img" style="display: flex; justify-content: center; align-items: center; min-width: 200px; height: 100%;">
+        <canvas id="tetrahedral-canvas" width="180" height="180" style="background:transparent; display: block; margin: 0 auto;"></canvas>
       </div>
     </div>
   </section>
@@ -565,7 +565,6 @@
 
   <!-- Footer -->
   <footer>
-    <div style="margin-top: 1rem; font-size: 0.95rem;">&copy; 2024 depHy. All rights reserved.</div>
   </footer>
 
   <script>
@@ -686,6 +685,74 @@
         bgBubbles.height = window.innerHeight;
       });
     }
+
+    // Tetrahedral molecule animation for About section
+    (function() {
+      const canvas = document.getElementById('tetrahedral-canvas');
+      if (!canvas) return;
+      const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
+      renderer.setClearColor(0x000000, 0);
+      renderer.setSize(180, 180);
+      const scene = new THREE.Scene();
+      const camera = new THREE.PerspectiveCamera(45, 1, 0.1, 100);
+      camera.position.z = 5.5;
+      // Central atom
+      const centerMaterial = new THREE.MeshPhongMaterial({ color: 0xE5ADA8 });
+      const centerGeometry = new THREE.SphereGeometry(0.5, 32, 32);
+      const center = new THREE.Mesh(centerGeometry, centerMaterial);
+      scene.add(center);
+      // Four outer atoms (tetrahedral)
+      const outerMaterial = new THREE.MeshPhongMaterial({ color: 0x725C3F });
+      const outerGeometry = new THREE.SphereGeometry(0.28, 32, 32);
+      const r = 1.3;
+      const positions = [
+        [ r, 0, -r/Math.sqrt(2)],
+        [-r, 0, -r/Math.sqrt(2)],
+        [0,  r,  r/Math.sqrt(2)],
+        [0, -r,  r/Math.sqrt(2)]
+      ];
+      const outers = positions.map(pos => {
+        const atom = new THREE.Mesh(outerGeometry, outerMaterial);
+        atom.position.set(...pos);
+        scene.add(atom);
+        // Bond
+        const bondGeom = new THREE.CylinderGeometry(0.09, 0.09, 1.3, 16);
+        const bondMat = new THREE.MeshPhongMaterial({ color: 0xD0A77B });
+        const bond = new THREE.Mesh(bondGeom, bondMat);
+        bond.position.set((pos[0])/2, (pos[1])/2, (pos[2])/2);
+        bond.lookAt(center.position);
+        bond.rotateX(Math.PI/2);
+        scene.add(bond);
+        return atom;
+      });
+      // Lighting
+      const light1 = new THREE.PointLight(0xffffff, 0.8);
+      light1.position.set(5, 5, 10);
+      scene.add(light1);
+      const light2 = new THREE.AmbientLight(0xffffff, 0.5);
+      scene.add(light2);
+      // Animation
+      let spinning = false;
+      let rotY = 0;
+      function animate() {
+        if (spinning) rotY += 0.01;
+        scene.rotation.y = rotY;
+        renderer.render(scene, camera);
+        requestAnimationFrame(animate);
+      }
+      animate();
+      // Hover interaction
+      canvas.addEventListener('mouseenter', () => { spinning = true; });
+      canvas.addEventListener('mouseleave', () => { spinning = false; lastX = null; });
+      let lastX = null;
+      canvas.addEventListener('mousemove', e => {
+        if (spinning && lastX !== null) {
+          const dx = e.offsetX - lastX;
+          rotY += dx * 0.01;
+        }
+        lastX = e.offsetX;
+      });
+    })();
   </script>
 </body>
 </html>
