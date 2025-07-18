@@ -12,100 +12,169 @@ REACTION_DATABASE = {
     # Synthesis
     ('H2', 'O2'): {
         'equation': '2H₂ + O₂ → 2H₂O',
-        'temperature': 400, 'pressure': 1.0, 'concentration_A': 0.5, 'concentration_B': 0.5, 'catalyst': 'Pt or Pd', 'success_rate': 0.95, 'notes': 'Water synthesis, exothermic.'
+        'temperature': 500,  # 500°C (industrial, water synthesis)
+        'pressure': 1.0,     # 1 atm
+        'concentration_A': 1.0, 'concentration_B': 0.5, 'catalyst': 'Pt or Pd',
+        'success_rate': 0.98, 'notes': 'Water synthesis, exothermic. Industrial: 500°C, Pt/Pd catalyst.'
     },
     ('N2', 'H2'): {
         'equation': 'N₂ + 3H₂ → 2NH₃',
-        'temperature': 450, 'pressure': 200, 'concentration_A': 0.5, 'concentration_B': 1.5, 'catalyst': 'Fe (Haber process)', 'success_rate': 0.85, 'notes': 'Haber process.'
+        'temperature': 450,  # 450°C (Haber process)
+        'pressure': 200,     # 200 atm
+        'concentration_A': 1.0, 'concentration_B': 3.0, 'catalyst': 'Fe (Haber process)',
+        'success_rate': 0.85, 'notes': 'Haber process. Industrial: 450°C, 200 atm, Fe catalyst.'
     },
     ('C', 'O2'): {
         'equation': 'C + O₂ → CO₂',
-        'temperature': 800, 'pressure': 1.0, 'concentration_A': 0.5, 'concentration_B': 0.5, 'catalyst': 'None', 'success_rate': 0.99, 'notes': 'Combustion of carbon.'
+        'temperature': 700,  # 700°C (combustion)
+        'pressure': 1.0,     # 1 atm
+        'concentration_A': 1.0, 'concentration_B': 1.0, 'catalyst': 'None',
+        'success_rate': 0.99, 'notes': 'Combustion of carbon. Standard: 700°C.'
     },
     ('S', 'O2'): {
         'equation': 'S + O₂ → SO₂',
-        'temperature': 300, 'pressure': 1.0, 'concentration_A': 0.5, 'concentration_B': 0.5, 'catalyst': 'None', 'success_rate': 0.95, 'notes': 'Sulfur dioxide formation.'
+        'temperature': 250,  # 250°C (lab)
+        'pressure': 1.0,     # 1 atm
+        'concentration_A': 1.0, 'concentration_B': 1.0, 'catalyst': 'None',
+        'success_rate': 0.98, 'notes': 'Sulfur dioxide formation. Standard: 250°C.'
     },
     ('Na', 'Cl2'): {
         'equation': '2Na + Cl₂ → 2NaCl',
-        'temperature': 25, 'pressure': 1.0, 'concentration_A': 0.5, 'concentration_B': 0.5, 'catalyst': 'None', 'success_rate': 0.99, 'notes': 'Salt synthesis.'
+        'temperature': 25,   # Room temp (lab)
+        'pressure': 1.0,     # 1 atm
+        'concentration_A': 1.0, 'concentration_B': 1.0, 'catalyst': 'None',
+        'success_rate': 0.99, 'notes': 'Salt synthesis. Room temp.'
     },
     ('K', 'Cl2'): {
         'equation': '2K + Cl₂ → 2KCl',
-        'temperature': 25, 'pressure': 1.0, 'concentration_A': 0.5, 'concentration_B': 0.5, 'catalyst': 'None', 'success_rate': 0.99, 'notes': 'Potassium chloride synthesis.'
+        'temperature': 25,   # Room temp (lab)
+        'pressure': 1.0,     # 1 atm
+        'concentration_A': 1.0, 'concentration_B': 1.0, 'catalyst': 'None',
+        'success_rate': 0.99, 'notes': 'Potassium chloride synthesis. Room temp.'
     },
     ('Ca', 'O2'): {
         'equation': '2Ca + O₂ → 2CaO',
-        'temperature': 500, 'pressure': 1.0, 'concentration_A': 0.5, 'concentration_B': 0.5, 'catalyst': 'None', 'success_rate': 0.98, 'notes': 'Calcium oxide formation.'
+        'temperature': 600,  # 600°C (lab)
+        'pressure': 1.0,     # 1 atm
+        'concentration_A': 1.0, 'concentration_B': 1.0, 'catalyst': 'None',
+        'success_rate': 0.98, 'notes': 'Calcium oxide formation. Standard: 600°C.'
     },
     ('Mg', 'O2'): {
         'equation': '2Mg + O₂ → 2MgO',
-        'temperature': 600, 'pressure': 1.0, 'concentration_A': 0.5, 'concentration_B': 0.5, 'catalyst': 'None', 'success_rate': 0.98, 'notes': 'Magnesium oxide formation.'
+        'temperature': 650,  # 650°C (lab)
+        'pressure': 1.0,     # 1 atm
+        'concentration_A': 1.0, 'concentration_B': 1.0, 'catalyst': 'None',
+        'success_rate': 0.98, 'notes': 'Magnesium oxide formation. Standard: 650°C.'
     },
     ('Fe', 'O2'): {
         'equation': '4Fe + 3O₂ → 2Fe₂O₃',
-        'temperature': 25, 'pressure': 1.0, 'concentration_A': 0.5, 'concentration_B': 0.5, 'catalyst': 'None', 'success_rate': 0.85, 'notes': 'Rust formation.'
+        'temperature': 25,   # Room temp (rusting)
+        'pressure': 1.0,     # 1 atm
+        'concentration_A': 1.0, 'concentration_B': 1.0, 'catalyst': 'Water (moisture)',
+        'success_rate': 0.85, 'notes': 'Rust formation. Room temp, needs moisture.'
     },
     ('H2', 'Cl2'): {
         'equation': 'H₂ + Cl₂ → 2HCl',
-        'temperature': 200, 'pressure': 1.0, 'concentration_A': 0.5, 'concentration_B': 0.5, 'catalyst': 'Light', 'success_rate': 0.98, 'notes': 'Hydrogen chloride synthesis.'
+        'temperature': 25,   # Room temp, light required
+        'pressure': 1.0,     # 1 atm
+        'concentration_A': 1.0, 'concentration_B': 1.0, 'catalyst': 'Light (UV)',
+        'success_rate': 0.98, 'notes': 'Hydrogen chloride synthesis. Room temp, UV light.'
     },
     ('H2', 'Br2'): {
         'equation': 'H₂ + Br₂ → 2HBr',
-        'temperature': 300, 'pressure': 1.0, 'concentration_A': 0.5, 'concentration_B': 0.5, 'catalyst': 'None', 'success_rate': 0.90, 'notes': 'Hydrogen bromide synthesis.'
+        'temperature': 150,  # 150°C (lab)
+        'pressure': 1.0,     # 1 atm
+        'concentration_A': 1.0, 'concentration_B': 1.0, 'catalyst': 'Pt',
+        'success_rate': 0.90, 'notes': 'Hydrogen bromide synthesis. 150°C, Pt catalyst.'
     },
     ('H2', 'S'): {
         'equation': 'H₂ + S → H₂S',
-        'temperature': 400, 'pressure': 1.0, 'concentration_A': 0.5, 'concentration_B': 0.5, 'catalyst': 'None', 'success_rate': 0.90, 'notes': 'Hydrogen sulfide synthesis.'
+        'temperature': 200,  # 200°C (lab)
+        'pressure': 1.0,     # 1 atm
+        'concentration_A': 1.0, 'concentration_B': 1.0, 'catalyst': 'None',
+        'success_rate': 0.90, 'notes': 'Hydrogen sulfide synthesis. 200°C.'
     },
     # Acid-base
     ('HCl', 'NaOH'): {
         'equation': 'HCl + NaOH → NaCl + H₂O',
-        'temperature': 25, 'pressure': 1.0, 'concentration_A': 0.5, 'concentration_B': 0.5, 'catalyst': 'None', 'success_rate': 0.99, 'notes': 'Neutralization.'
+        'temperature': 25,   # Room temp
+        'pressure': 1.0,     # 1 atm
+        'concentration_A': 1.0, 'concentration_B': 1.0, 'catalyst': 'None',
+        'success_rate': 0.99, 'notes': 'Neutralization. Room temp.'
     },
     ('HNO3', 'KOH'): {
         'equation': 'HNO₃ + KOH → KNO₃ + H₂O',
-        'temperature': 25, 'pressure': 1.0, 'concentration_A': 0.5, 'concentration_B': 0.5, 'catalyst': 'None', 'success_rate': 0.99, 'notes': 'Neutralization.'
+        'temperature': 25,   # Room temp
+        'pressure': 1.0,     # 1 atm
+        'concentration_A': 1.0, 'concentration_B': 1.0, 'catalyst': 'None',
+        'success_rate': 0.99, 'notes': 'Neutralization. Room temp.'
     },
     ('H2SO4', 'Ca(OH)2'): {
         'equation': 'H₂SO₄ + Ca(OH)₂ → CaSO₄ + 2H₂O',
-        'temperature': 25, 'pressure': 1.0, 'concentration_A': 0.5, 'concentration_B': 0.5, 'catalyst': 'None', 'success_rate': 0.99, 'notes': 'Neutralization.'
+        'temperature': 25,   # Room temp
+        'pressure': 1.0,     # 1 atm
+        'concentration_A': 1.0, 'concentration_B': 1.0, 'catalyst': 'None',
+        'success_rate': 0.99, 'notes': 'Neutralization. Room temp.'
     },
     # Combustion
     ('CH4', 'O2'): {
         'equation': 'CH₄ + 2O₂ → CO₂ + 2H₂O',
-        'temperature': 600, 'pressure': 1.0, 'concentration_A': 0.5, 'concentration_B': 1.0, 'catalyst': 'None', 'success_rate': 0.98, 'notes': 'Methane combustion.'
+        'temperature': 650,  # 650°C (methane combustion)
+        'pressure': 1.0,     # 1 atm
+        'concentration_A': 1.0, 'concentration_B': 2.0, 'catalyst': 'None',
+        'success_rate': 0.98, 'notes': 'Methane combustion. 650°C.'
     },
     ('C2H6', 'O2'): {
         'equation': '2C₂H₆ + 7O₂ → 4CO₂ + 6H₂O',
-        'temperature': 700, 'pressure': 1.0, 'concentration_A': 0.5, 'concentration_B': 1.5, 'catalyst': 'None', 'success_rate': 0.98, 'notes': 'Ethane combustion.'
+        'temperature': 700,  # 700°C (ethane combustion)
+        'pressure': 1.0,     # 1 atm
+        'concentration_A': 1.0, 'concentration_B': 3.5, 'catalyst': 'None',
+        'success_rate': 0.98, 'notes': 'Ethane combustion. 700°C.'
     },
     # Single replacement
     ('Zn', 'HCl'): {
         'equation': 'Zn + 2HCl → ZnCl₂ + H₂',
-        'temperature': 25, 'pressure': 1.0, 'concentration_A': 0.5, 'concentration_B': 0.5, 'catalyst': 'None', 'success_rate': 0.95, 'notes': 'Hydrogen gas evolution.'
+        'temperature': 25,   # Room temp
+        'pressure': 1.0,     # 1 atm
+        'concentration_A': 1.0, 'concentration_B': 2.0, 'catalyst': 'None',
+        'success_rate': 0.95, 'notes': 'Hydrogen gas evolution. Room temp.'
     },
     ('Fe', 'CuSO4'): {
         'equation': 'Fe + CuSO₄ → FeSO₄ + Cu',
-        'temperature': 25, 'pressure': 1.0, 'concentration_A': 0.5, 'concentration_B': 0.5, 'catalyst': 'None', 'success_rate': 0.95, 'notes': 'Copper displacement.'
+        'temperature': 25,   # Room temp
+        'pressure': 1.0,     # 1 atm
+        'concentration_A': 1.0, 'concentration_B': 1.0, 'catalyst': 'None',
+        'success_rate': 0.95, 'notes': 'Copper displacement. Room temp.'
     },
     # Double replacement
     ('AgNO3', 'NaCl'): {
         'equation': 'AgNO₃ + NaCl → AgCl↓ + NaNO₃',
-        'temperature': 25, 'pressure': 1.0, 'concentration_A': 0.5, 'concentration_B': 0.5, 'catalyst': 'None', 'success_rate': 0.98, 'notes': 'Precipitation of AgCl.'
+        'temperature': 25,   # Room temp
+        'pressure': 1.0,     # 1 atm
+        'concentration_A': 1.0, 'concentration_B': 1.0, 'catalyst': 'None',
+        'success_rate': 0.98, 'notes': 'Precipitation of AgCl. Room temp.'
     },
     ('BaCl2', 'Na2SO4'): {
         'equation': 'BaCl₂ + Na₂SO₄ → BaSO₄↓ + 2NaCl',
-        'temperature': 25, 'pressure': 1.0, 'concentration_A': 0.5, 'concentration_B': 0.5, 'catalyst': 'None', 'success_rate': 0.98, 'notes': 'Precipitation of BaSO₄.'
+        'temperature': 25,   # Room temp
+        'pressure': 1.0,     # 1 atm
+        'concentration_A': 1.0, 'concentration_B': 1.0, 'catalyst': 'None',
+        'success_rate': 0.98, 'notes': 'Precipitation of BaSO₄. Room temp.'
     },
     # Decomposition
     ('H2O2',): {
         'equation': '2H₂O₂ → 2H₂O + O₂',
-        'temperature': 50, 'pressure': 1.0, 'concentration_A': 1.0, 'concentration_B': 0.0, 'catalyst': 'MnO₂', 'success_rate': 0.90, 'notes': 'Hydrogen peroxide decomposition.'
+        'temperature': 50,   # 50°C (lab, with catalyst)
+        'pressure': 1.0,     # 1 atm
+        'concentration_A': 1.0, 'concentration_B': 0.0, 'catalyst': 'MnO₂',
+        'success_rate': 0.90, 'notes': 'Hydrogen peroxide decomposition. 50°C, MnO₂ catalyst.'
     },
     ('CaCO3',): {
         'equation': 'CaCO₃ → CaO + CO₂',
-        'temperature': 825, 'pressure': 1.0, 'concentration_A': 1.0, 'concentration_B': 0.0, 'catalyst': 'None', 'success_rate': 0.90, 'notes': 'Thermal decomposition.'
+        'temperature': 825,  # 825°C (thermal decomposition)
+        'pressure': 1.0,     # 1 atm
+        'concentration_A': 1.0, 'concentration_B': 0.0, 'catalyst': 'None',
+        'success_rate': 0.90, 'notes': 'Thermal decomposition. 825°C.'
     },
     # Add more as needed for all displayed options
 }
