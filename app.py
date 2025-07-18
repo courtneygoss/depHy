@@ -1,6 +1,8 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 import os
+import pickle
+import numpy as np
 
 app = Flask(__name__)
 CORS(app)
@@ -109,21 +111,50 @@ REACTION_DATABASE = {
 }
 
 def find_reaction(elements):
-    # Try all orderings
+    """
+    Find a reaction in the database that matches the given elements.
+    Tries all orderings of the input elements.
+    Returns the reaction dict if found, else None.
+    """
     for key in REACTION_DATABASE:
         if set(key) == set(elements):
             return REACTION_DATABASE[key]
     return None
 
+# Load ML model and preprocessors
+MODEL_PATH = 'model.pkl'
+PREPROCESSORS_PATH = 'preprocessors.pkl'
+
+try:
+    with open(MODEL_PATH, 'rb') as f:
+        model = pickle.load(f)
+    with open(PREPROCESSORS_PATH, 'rb') as f:
+        preprocessors = pickle.load(f)
+    scaler = preprocessors['scaler']
+    encoder = preprocessors['label_encoder']
+    print('[depHy] ML model and preprocessors loaded successfully.')
+except Exception as e:
+    print(f'[depHy] Warning: Could not load ML model or preprocessors: {e}')
+    model = None
+    scaler = None
+    encoder = None
+
 @app.route('/predict-reaction', methods=['POST'])
 def predict_reaction():
+    """
+    API endpoint to predict reaction conditions based on selected elements.
+    Expects JSON: {"elements": ["H2", "O2"]}
+    Returns: JSON with balanced equation, optimal conditions, and notes.
+    """
     data = request.get_json()
+    # Validate input
     if not data or 'elements' not in data or len(data['elements']) < 2:
         return jsonify({'error': 'Please provide at least two elements.'}), 400
     elements = data['elements']
     reaction = find_reaction(elements)
     if not reaction:
         return jsonify({'error': f'No known reaction for: {elements}'}), 404
+    # Return the reaction details
     return jsonify({
         'balanced_equation': reaction['equation'],
         'optimal_conditions': {
@@ -140,8 +171,13 @@ def predict_reaction():
 
 @app.route('/ping')
 def ping():
+    """
+    Simple health check endpoint.
+    Returns 'pong' if the server is running.
+    """
     return 'pong', 200
 
 if __name__ == '__main__':
     print("[depHy] API starting on http://127.0.0.1:5001")
+    # Run the Flask app in debug mode for easier troubleshooting
     app.run(debug=True, host='127.0.0.1', port=5001) 

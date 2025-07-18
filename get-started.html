@@ -521,33 +521,6 @@
         <div id="selected-list" class="selected-list"></div>
       </div>
     </div>
-    <!-- Model-based prediction form -->
-    <div id="model-predict-form" style="display:none; margin-top:2rem;">
-      <h3>Or: Enter Reaction Conditions Directly</h3>
-      <form id="directPredictionForm">
-        <div class="form-group">
-          <label for="pressureInput">Pressure (atm):</label>
-          <input type="number" id="pressureInput" name="pressure" min="0.5" max="3.0" step="0.01" required>
-        </div>
-        <div class="form-group">
-          <label for="concAInput">Concentration A (mol/L):</label>
-          <input type="number" id="concAInput" name="concentration_A" min="0.1" max="1.0" step="0.01" required>
-        </div>
-        <div class="form-group">
-          <label for="concBInput">Concentration B (mol/L):</label>
-          <input type="number" id="concBInput" name="concentration_B" min="0.1" max="1.0" step="0.01" required>
-        </div>
-        <div class="form-group">
-          <label for="catalystInput">Catalyst:</label>
-          <select id="catalystInput" name="catalyst" required>
-            <option value="yes">Yes</option>
-            <option value="no">No</option>
-          </select>
-        </div>
-        <button type="submit" id="directSubmitBtn">Predict Outcome</button>
-      </form>
-    </div>
-    <!-- Restore the Contact Us form at the bottom of the page -->
     <form id="predictionForm">
       <div class="temperature-toggle">
         <label>Temperature Unit:</label>
@@ -559,7 +532,7 @@
       <button type="submit" id="submitBtn">Find Optimal Reaction Conditions</button>
     </form>
     <div id="result" class="result" style="display: none;">
-      <h3>Optimal Reaction Conditions</h3>
+      <h3>Prediction Results</h3>
       <div id="resultContent"></div>
     </div>
   </main>
@@ -665,7 +638,7 @@
     let selectedMolecules = new Set();
     let lastApiData = null;
 
-    // Handle checkbox selection
+    // Handle checkbox selection for molecule/element selection
     document.querySelectorAll('.molecule-category input[type="checkbox"]').forEach(checkbox => {
       checkbox.addEventListener('change', function() {
         if (this.checked) {
@@ -677,7 +650,7 @@
       });
     });
     
-    // Handle temperature toggle
+    // Handle temperature unit toggle (Celsius/Kelvin)
     document.querySelectorAll('.temp-btn').forEach(btn => {
       btn.addEventListener('click', function() {
         document.querySelectorAll('.temp-btn').forEach(b => b.classList.remove('active'));
@@ -689,7 +662,7 @@
       });
     });
     
-    // Update selected molecules display
+    // Update the display of selected molecules
     function updateSelectedDisplay() {
       const count = selectedMolecules.size;
       document.getElementById('selected-count').textContent = count;
@@ -708,14 +681,14 @@
       });
     }
     
-    // Remove molecule function
+    // Remove a molecule from the selection
     function removeMolecule(molecule) {
       selectedMolecules.delete(molecule);
       document.querySelector(`input[value="${molecule}"]`).checked = false;
       updateSelectedDisplay();
     }
     
-    // Update temperature display based on current unit
+    // Update temperature display (for future use)
     function updateTemperatureDisplay() {
       if (!reactionData) return;
       
@@ -735,8 +708,9 @@
       }
     }
     
-    const API_URL = "http://127.0.0.1:5001"; // Use 127.0.0.1 for best compatibility on Mac
+    const API_URL = "http://127.0.0.1:5001"; // Flask API URL
 
+    // Render results from the API response
     function renderResults(data) {
       let html = '';
       if (data.balanced_equation) {
@@ -775,36 +749,33 @@
       }
     }
 
-    // Prediction form handler
+    // --- Element-based Prediction Form Handler ---
+    // Handles form submission for element-based prediction
     document.getElementById('predictionForm').addEventListener('submit', async function(e) {
       e.preventDefault();
       const submitBtn = document.getElementById('submitBtn');
       const resultDiv = document.getElementById('result');
       const resultContent = document.getElementById('resultContent');
-      
-      // Get selected elements
+      // Get selected elements from checkboxes
       const selectedElements = Array.from(selectedMolecules);
-      
       if (selectedElements.length < 2) {
         resultDiv.style.display = 'block';
         resultContent.innerHTML = '<div class="error"><strong>Error:</strong> Please select at least 2 elements to react.</div>';
         return;
       }
-      
+      // Show loading state
       submitBtn.disabled = true;
       submitBtn.textContent = 'Analyzing Reaction...';
       resultDiv.style.display = 'block';
       resultContent.innerHTML = '<div class="loading">Finding optimal reaction conditions...</div>';
-      
       const formData = {
         elements: selectedElements
       };
-      
       try {
         // Check API status before making the request
         const pingRes = await fetch(API_URL + '/ping');
         if (!pingRes.ok) throw new Error('API not available');
-
+        // Make POST request to Flask API
         const response = await fetch(API_URL + '/predict-reaction', {
           method: 'POST',
           headers: {
@@ -812,9 +783,7 @@
           },
           body: JSON.stringify(formData)
         });
-        
         const data = await response.json();
-        
         if (response.ok) {
           lastApiData = data;
           renderResults(data);
@@ -823,8 +792,8 @@
           resultContent.innerHTML = `<div class="error"><strong>Error:</strong> ${data.error}</div>`;
           resultDiv.className = 'result error';
         }
-        
       } catch (error) {
+        // Handle network or server errors
         resultContent.innerHTML = `
           <div class="error">
             <strong>Connection Error:</strong> Could not connect to the API. 
@@ -833,6 +802,7 @@
         `;
         resultDiv.className = 'result error';
       } finally {
+        // Reset button state
         submitBtn.disabled = false;
         submitBtn.textContent = 'Find Optimal Reaction Conditions';
       }
