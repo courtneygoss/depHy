@@ -3,6 +3,7 @@ from flask_cors import CORS
 import os
 import pickle
 import numpy as np
+import datetime
 
 app = Flask(__name__)
 CORS(app)
@@ -194,16 +195,26 @@ def find_reaction(elements):
 MODEL_PATH = 'model.pkl'
 PREPROCESSORS_PATH = 'preprocessors.pkl'
 
+# Initialize ML components as None
+model = None
+scaler = None
+encoder = None
+
 try:
-    with open(MODEL_PATH, 'rb') as f:
-        model = pickle.load(f)
-    with open(PREPROCESSORS_PATH, 'rb') as f:
-        preprocessors = pickle.load(f)
-    scaler = preprocessors['scaler']
-    encoder = preprocessors['label_encoder']
-    print('[depHy] ML model and preprocessors loaded successfully.')
+    # Check if files exist before trying to load them
+    if os.path.exists(MODEL_PATH) and os.path.exists(PREPROCESSORS_PATH):
+        with open(MODEL_PATH, 'rb') as f:
+            model = pickle.load(f)
+        with open(PREPROCESSORS_PATH, 'rb') as f:
+            preprocessors = pickle.load(f)
+        scaler = preprocessors['scaler']
+        encoder = preprocessors['label_encoder']
+        print('[depHy] ML model and preprocessors loaded successfully.')
+    else:
+        print('[depHy] ML model files not found, running without ML features.')
 except Exception as e:
     print(f'[depHy] Warning: Could not load ML model or preprocessors: {e}')
+    print('[depHy] Continuing without ML features...')
     model = None
     scaler = None
     encoder = None
@@ -241,22 +252,48 @@ def predict_reaction():
 @app.route('/')
 def index():
     """Serve the main index.html file"""
-    return send_from_directory('.', 'index.html')
+    try:
+        return send_from_directory('.', 'index.html')
+    except Exception as e:
+        return f'<h1>depHy Chemistry Website</h1><p>Server is running but index.html not found: {e}</p>', 200
 
 @app.route('/get-started')
 def get_started():
     """Serve the get-started.html file"""
-    return send_from_directory('.', 'get-started.html')
+    try:
+        return send_from_directory('.', 'get-started.html')
+    except Exception as e:
+        return f'<h1>Get Started</h1><p>get-started.html not found: {e}</p>', 200
 
 @app.route('/api-test')
 def api_test():
     """Serve the api_test.html file"""
-    return send_from_directory('.', 'api_test.html')
+    try:
+        return send_from_directory('.', 'api_test.html')
+    except Exception as e:
+        return f'<h1>API Test</h1><p>api_test.html not found: {e}</p>', 200
 
 @app.route('/<filename>')
 def serve_static(filename):
     """Serve static files like images and HTML files"""
-    return send_from_directory('.', filename)
+    try:
+        return send_from_directory('.', filename)
+    except Exception as e:
+        return f'<h1>File Not Found</h1><p>{filename} not found: {e}</p>', 404
+
+@app.route('/health')
+def health():
+    """
+    Comprehensive health check endpoint.
+    Returns detailed status information.
+    """
+    status = {
+        'status': 'healthy',
+        'message': 'depHy chemistry website is running',
+        'ml_model_loaded': model is not None,
+        'timestamp': str(datetime.datetime.now())
+    }
+    return jsonify(status), 200
 
 @app.route('/ping')
 def ping():
