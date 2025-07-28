@@ -4,12 +4,10 @@ services:
     env: python
     plan: free
     branch: main
-    buildCommand: "pip install --upgrade pip==23.3.1 setuptools==68.2.2 wheel==0.41.2 && pip install -r requirements.txt"
-    startCommand: "gunicorn app:app --bind 0.0.0.0:$PORT --workers 2 --timeout 120"
+    buildCommand: "pip install --upgrade pip setuptools wheel && pip install -r requirements.txt"
+    startCommand: "gunicorn app:app --bind 0.0.0.0:$PORT"
     envVars:
       - key: FLASK_ENV
         value: production
       - key: PYTHON_VERSION
-        value: "3.8.18"
-      - key: PYTHONPATH
-        value: "."
+        value: "3.11"

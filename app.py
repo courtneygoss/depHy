@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, send_from_directory
 from flask_cors import CORS
 import os
 import pickle
@@ -238,6 +238,26 @@ def predict_reaction():
         'selected_elements': elements
     })
 
+@app.route('/')
+def index():
+    """Serve the main index.html file"""
+    return send_from_directory('.', 'index.html')
+
+@app.route('/get-started')
+def get_started():
+    """Serve the get-started.html file"""
+    return send_from_directory('.', 'get-started.html')
+
+@app.route('/api-test')
+def api_test():
+    """Serve the api_test.html file"""
+    return send_from_directory('.', 'api_test.html')
+
+@app.route('/<filename>')
+def serve_static(filename):
+    """Serve static files like images and HTML files"""
+    return send_from_directory('.', filename)
+
 @app.route('/ping')
 def ping():
     """
@@ -247,6 +267,7 @@ def ping():
     return 'pong', 200
 
 if __name__ == '__main__':
-    print("[depHy] API starting on http://127.0.0.1:5001")
+    port = int(os.environ.get('PORT', 5001))
+    print(f"[depHy] API starting on http://127.0.0.1:{port}")
     # Run the Flask app in debug mode for easier troubleshooting
-    app.run(debug=True, host='127.0.0.1', port=5001) 
+    app.run(debug=True, host='0.0.0.0', port=port) 
