@@ -6,7 +6,7 @@ build-backend = "setuptools.build_meta"
 name = "depHy"
 version = "1.0.0"
 description = "Chemistry reaction prediction API"
-requires-python = ">=3.11,<3.12"
+requires-python = ">=3.10,<3.11"
 dependencies = [
     "Flask==2.3.3",
     "Flask-CORS==4.0.0",
