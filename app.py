@@ -203,15 +203,36 @@ encoder = None
 try:
     # Check if files exist before trying to load them
     if os.path.exists(MODEL_PATH) and os.path.exists(PREPROCESSORS_PATH):
-        with open(MODEL_PATH, 'rb') as f:
-            model = pickle.load(f)
-        with open(PREPROCESSORS_PATH, 'rb') as f:
-            preprocessors = pickle.load(f)
-        scaler = preprocessors['scaler']
-        encoder = preprocessors['label_encoder']
-        print('[depHy] ML model and preprocessors loaded successfully.')
+        print(f'[depHy] Found model files: {MODEL_PATH}, {PREPROCESSORS_PATH}')
+        print(f'[depHy] Python version: {os.sys.version}')
+        
+        # Try to load with error handling for pickle compatibility
+        try:
+            with open(MODEL_PATH, 'rb') as f:
+                model = pickle.load(f)
+            print('[depHy] Model loaded successfully')
+        except Exception as model_error:
+            print(f'[depHy] Model loading failed: {model_error}')
+            model = None
+            
+        try:
+            with open(PREPROCESSORS_PATH, 'rb') as f:
+                preprocessors = pickle.load(f)
+            scaler = preprocessors.get('scaler')
+            encoder = preprocessors.get('label_encoder')
+            print('[depHy] Preprocessors loaded successfully')
+        except Exception as preproc_error:
+            print(f'[depHy] Preprocessors loading failed: {preproc_error}')
+            scaler = None
+            encoder = None
+            
+        if model is not None and scaler is not None and encoder is not None:
+            print('[depHy] ML model and preprocessors loaded successfully.')
+        else:
+            print('[depHy] Some ML components failed to load, running with limited features.')
     else:
-        print('[depHy] ML model files not found, running without ML features.')
+        print(f'[depHy] ML model files not found: {MODEL_PATH}, {PREPROCESSORS_PATH}')
+        print('[depHy] Running without ML features.')
 except Exception as e:
     print(f'[depHy] Warning: Could not load ML model or preprocessors: {e}')
     print('[depHy] Continuing without ML features...')
@@ -305,6 +326,12 @@ def ping():
 
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5001))
-    print(f"[depHy] API starting on http://127.0.0.1:{port}")
-    # Run the Flask app in debug mode for easier troubleshooting
-    app.run(debug=True, host='0.0.0.0', port=port) 
+    print(f"[depHy] Starting depHy Chemistry API...")
+    print(f"[depHy] Python version: {os.sys.version}")
+    print(f"[depHy] Port: {port}")
+    print(f"[depHy] ML Model loaded: {model is not None}")
+    print(f"[depHy] Scaler loaded: {scaler is not None}")
+    print(f"[depHy] Encoder loaded: {encoder is not None}")
+    
+    # Run the Flask app
+    app.run(host='0.0.0.0', port=port) 

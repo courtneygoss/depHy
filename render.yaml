@@ -10,7 +10,7 @@ services:
       - key: FLASK_ENV
         value: production
       - key: PYTHON_VERSION
-        value: "3.11.7"
+        value: "3.11.0"
       - key: PYTHONPATH
         value: "."
     buildFilter:
