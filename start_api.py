@@ -12,7 +12,6 @@ def check_dependencies():
     """Check if required packages are installed"""
     try:
         import flask
-        import pandas
         import numpy
         import sklearn
         print("✓ All required packages are installed")
