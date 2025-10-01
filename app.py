@@ -307,4 +307,4 @@ if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5001))
     print(f"[depHy] API starting on http://127.0.0.1:{port}")
     # Run the Flask app in debug mode for easier troubleshooting
-    app.run(debug=True, host='0.0.0.0', port=port) 
+    app.run(debug=False, host='0.0.0.0', port=port) 
